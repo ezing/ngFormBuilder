@@ -1052,8 +1052,8 @@ module.exports = function(app) {
   app.config([
     'formioComponentsProvider',
     function(formioComponentsProvider) {
-      var views = _.cloneDeep(formioComponentsProvider.$get().components.textfield.views);
-      _.each(views, function(view) {
+      var views = lodash.cloneDeep(formioComponentsProvider.$get().components.textfield.views);
+      lodash.each(views, function(view) {
         if (view.name === 'Validation') {
           view.template = 'formio/components/email/validate.html';
         }
@@ -1162,7 +1162,7 @@ module.exports = function(app) {
           'Formio',
           function($scope, Formio) {
             // Pull out title and name from the list of storage plugins.
-            $scope.storage = _.map(Formio.providers.storage, function(storage, key) {
+            $scope.storage = lodash.map(Formio.providers.storage, function(storage, key) {
               return {
                 title: storage.title,
                 name: key
@@ -1893,7 +1893,7 @@ module.exports = function(app) {
             var fields = [];
             FormioUtils.eachComponent(components, function(component) {
               if (component.key && component.input && (component.type !== 'button') && component.key !== $scope.component.key) {
-                var comp = _.clone(component);
+                var comp = lodash.clone(component);
                 if (!comp.label) {
                   comp.label = comp.key;
                 }
@@ -2917,16 +2917,16 @@ module.exports = ['debounce', function(debounce) {
           setNumPages();
         });
 
-        $scope.formComponents = _.cloneDeep(formioComponents.components);
-        _.each($scope.formComponents, function(component, key) {
+        $scope.formComponents = lodash.cloneDeep(formioComponents.components);
+        lodash.each($scope.formComponents, function(component, key) {
           component.settings.isNew = true;
           if (component.settings.hasOwnProperty('builder') && !component.settings.builder || component.disabled) {
             delete $scope.formComponents[key];
           }
         });
 
-        $scope.formComponentGroups = _.cloneDeep(_.omitBy(formioComponents.groups, 'disabled'));
-        $scope.formComponentsByGroup = _.groupBy($scope.formComponents, function(component) {
+        $scope.formComponentGroups = lodash.cloneDeep(lodash.omitBy(formioComponents.groups, 'disabled'));
+        $scope.formComponentsByGroup = lodash.groupBy($scope.formComponents, function(component) {
           return component.group;
         });
 
@@ -2942,7 +2942,7 @@ module.exports = ['debounce', function(debounce) {
 
           $scope.formio.loadForms({params: {type: 'resource', limit: 100}}).then(function(resources) {
             // Iterate through all resources.
-            _.each(resources, function(resource) {
+            lodash.each(resources, function(resource) {
               var resourceKey = resource.name;
 
               // Add a legend for this resource.
@@ -2957,11 +2957,11 @@ module.exports = ['debounce', function(debounce) {
 
                 var componentName = component.label;
                 if (!componentName && component.key) {
-                  componentName = _.upperFirst(component.key);
+                  componentName = lodash.upperFirst(component.key);
                 }
 
-                $scope.formComponentsByGroup.resource[resourceKey].push(_.merge(
-                  _.cloneDeep(formioComponents.components[component.type], true),
+                $scope.formComponentsByGroup.resource[resourceKey].push(lodash.merge(
+                  lodash.cloneDeep(formioComponents.components[component.type], true),
                   {
                     title: componentName,
                     group: 'resource',
@@ -2997,7 +2997,7 @@ module.exports = ['debounce', function(debounce) {
           $scope.$emit('formUpdate', $scope.form);
         };
 
-        $scope.capitalize = _.capitalize;
+        $scope.capitalize = lodash.capitalize;
 
         // Set the root list height to the height of the formbuilder for ease of form building.
         var rootlistEL = angular.element('.rootlist');
@@ -3107,11 +3107,11 @@ module.exports = [
           $scope._booleans = ['', 'true', 'false'];
 
           // Filter the list of available form components for conditional logic.
-          $scope._components = _.get($scope, 'form.components') || [];
+          $scope._components = lodash.get($scope, 'form.components') || [];
           $scope._components = utils.flattenComponents($scope._components);
           // Remove non-input/button fields because they don't make sense.
           // FA-890 - Dont allow the current component to be a conditional trigger.
-          $scope._components = _.reject($scope._components, function(c) {
+          $scope._components = lodash.reject($scope._components, function(c) {
             return !c.input || (c.type === 'button') || (c.key === $scope.component.key) || (!c.label && !c.key);
           });
 
@@ -3164,7 +3164,7 @@ module.exports = [
   ) {
     $scope.builder = true;
     $rootScope.builder = true;
-    $scope.hideCount = (_.isNumber($scope.hideDndBoxCount) ? $scope.hideDndBoxCount : 1);
+    $scope.hideCount = (lodash.isNumber($scope.hideDndBoxCount) ? $scope.hideDndBoxCount : 1);
     $scope.$watch('hideDndBoxCount', function(hideCount) {
       $scope.hideCount = hideCount ? hideCount : 1;
     });
@@ -3305,7 +3305,7 @@ module.exports = [
               if ($scope.data.hasOwnProperty($scope.component.key)) {
                 delete $scope.data[$scope.component.key];
               }
-              $scope.component.key = _.camelCase($scope.component.label.replace(invalidRegex, ''));
+              $scope.component.key = lodash.camelCase($scope.component.label.replace(invalidRegex, ''));
               $scope.data[$scope.component.key] = $scope.component.multiple ? [''] : '';
             }
           });
@@ -3318,7 +3318,7 @@ module.exports = [
           }
           else {
             // Revert to old settings, but use the same object reference
-            _.assign(component, previousSettings);
+            lodash.assign(component, previousSettings);
           }
         }
         else {
@@ -3583,7 +3583,7 @@ module.exports = function() {
     },
     controller: ['$scope', function($scope) {
       $scope.component.tags = $scope.component.tags || [];
-      $scope.tags = _.map($scope.component.tags, function(tag) {
+      $scope.tags = lodash.map($scope.component.tags, function(tag) {
         return {text: tag};
       });
 
@@ -3670,7 +3670,7 @@ module.exports = function() {
                 tmpTable[row][col] = {components:[]};
               }
             }
-            $scope.component.rows = _.merge(tmpTable, $scope.component.rows);
+            $scope.component.rows = lodash.merge(tmpTable, $scope.component.rows);
             /*eslint-enable max-depth */
           }
         };
@@ -3847,10 +3847,10 @@ module.exports = function() {
             return;
           }
 
-          _.map(newValue, function(entry, i) {
+          lodash.map(newValue, function(entry, i) {
             if (entry[$scope.labelProperty] !== oldValue[i][$scope.labelProperty]) {// label changed
-              if (entry[$scope.valueProperty] === '' || entry[$scope.valueProperty] === _.camelCase(oldValue[i][$scope.labelProperty])) {
-                entry[$scope.valueProperty] = _.camelCase(entry[$scope.labelProperty]);
+              if (entry[$scope.valueProperty] === '' || entry[$scope.valueProperty] === lodash.camelCase(oldValue[i][$scope.labelProperty])) {
+                entry[$scope.valueProperty] = lodash.camelCase(entry[$scope.labelProperty]);
               }
             }
           });
